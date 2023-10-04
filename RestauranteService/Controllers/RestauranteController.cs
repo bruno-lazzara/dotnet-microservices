@@ -13,11 +13,12 @@ public class RestauranteController : ControllerBase
 {
     private readonly IRestauranteRepository _repository;
     private readonly IMapper _mapper;
-    private IItemServiceHttpClient _itemServiceHttpClient;
+    private readonly IItemServiceHttpClient _itemServiceHttpClient;
 
     public RestauranteController(
         IRestauranteRepository repository,
-        IMapper mapper, IItemServiceHttpClient itemServiceHttpClient)
+        IMapper mapper,
+        IItemServiceHttpClient itemServiceHttpClient)
     {
         _repository = repository;
         _mapper = mapper;
@@ -27,7 +28,6 @@ public class RestauranteController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<RestauranteReadDto>> GetAllRestaurantes()
     {
-
         var restaurantes = _repository.GetAllRestaurantes();
 
         return Ok(_mapper.Map<IEnumerable<RestauranteReadDto>>(restaurantes));
@@ -55,7 +55,6 @@ public class RestauranteController : ControllerBase
         var restauranteReadDto = _mapper.Map<RestauranteReadDto>(restaurante);
 
         _itemServiceHttpClient.EnviaRestauranteParaItemService(restauranteReadDto);
-
 
         return CreatedAtRoute(nameof(GetRestauranteById), new { restauranteReadDto.Id }, restauranteReadDto);
     }
