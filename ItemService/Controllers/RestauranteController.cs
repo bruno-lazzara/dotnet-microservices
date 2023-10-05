@@ -1,7 +1,7 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using ItemService.Data;
 using ItemService.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ItemService.Controllers;
 
