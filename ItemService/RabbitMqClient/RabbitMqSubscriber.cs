@@ -12,18 +12,19 @@ namespace ItemService.RabbitMqClient
         private readonly IConnection _connection;
         private readonly IModel _channel;
         private IProcessaEvento _processaEvento;
-        public RabbitMqSubscriber(IConfiguration configuration)
+        public RabbitMqSubscriber(IConfiguration configuration, IProcessaEvento processaEvento)
         {
             _configuration = configuration;
             _connection = new ConnectionFactory()
             {
-                HostName = "localhost",
-                Port = 8002
+                HostName = _configuration["RabbitMqHost"],
+                Port = Int32.Parse(_configuration["RabbitMqPort"])
             }.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange: "trigger", type: ExchangeType.Fanout);
             _nomeFila = _channel.QueueDeclare().QueueName;
             _channel.QueueBind(queue: _nomeFila, exchange: "trigger", routingKey: "");
+            _processaEvento = processaEvento;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
